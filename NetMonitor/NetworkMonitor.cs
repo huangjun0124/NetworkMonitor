@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Timers;
 using System.Collections;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows.Forms;
+using Timer = System.Timers.Timer;
 
 namespace NetMonitor
 {
@@ -29,22 +32,78 @@ namespace NetMonitor
         /// </summary>  
         private void EnumerateNetworkAdapters()
         {
-            PerformanceCounterCategory category = new PerformanceCounterCategory("Network Interface");
-
-            foreach (string name in category.GetInstanceNames())
+            string err;
+            if (!TryEnumerateNA(out err))
             {
-                // This one exists on every computer.  
-                if (name == "MS TCP Loopback interface")
-                    continue;
-                // Create an instance of NetworkAdapter class, and create performance counters for it.  
-                NetworkAdapter adapter =
-                    new NetworkAdapter(name)
-                    {
-                        dlCounter = new PerformanceCounter("Network Interface", "Bytes Received/sec", name),
-                        ulCounter = new PerformanceCounter("Network Interface", "Bytes Sent/sec", name)
-                    };
-                this.adapters.Add(adapter); // Add it to ArrayList adapter  
+                string cmd = "LODCTR /R";
+                // output : 信息: 成功地从系统备份存储中重建性能计数器设置
+                InvokeCmd(cmd);
+                if (!TryEnumerateNA(out err))
+                {
+                    MessageBox.Show(err);
+                }
             }
+        }
+
+        private string InvokeCmd(string cmd)
+        {
+            System.Diagnostics.Process p = new System.Diagnostics.Process();
+            p.StartInfo.FileName = "cmd.exe";
+            p.StartInfo.UseShellExecute = false; //是否使用操作系统shell启动
+            p.StartInfo.RedirectStandardInput = true; //接受来自调用程序的输入信息
+            p.StartInfo.RedirectStandardOutput = true; //由调用程序获取输出信息
+            p.StartInfo.RedirectStandardError = true; //重定向标准错误输出
+            p.StartInfo.CreateNoWindow = true; //不显示程序窗口
+            p.Start(); //启动程序
+
+            //向cmd窗口发送输入信息
+            p.StandardInput.WriteLine( cmd + "&exit"); //+ "&exit"
+
+            p.StandardInput.AutoFlush = true;
+            //p.StandardInput.WriteLine("exit");
+            //向标准输入写入要执行的命令。这里使用&是批处理命令的符号，表示前面一个命令不管是否执行成功都执行后面(exit)命令，如果不执行exit命令，后面调用ReadToEnd()方法会假死
+            //同类的符号还有&&和||前者表示必须前一个命令执行成功才会执行后面的命令，后者表示必须前一个命令执行失败才会执行后面的命令
+
+            //获取cmd窗口的输出信息
+            string outputLog;
+            outputLog = p.StandardOutput.ReadToEnd();
+            
+            p.WaitForExit(); //等待程序执行完退出进程
+            p.Close();
+
+            return outputLog;
+        }
+
+        private bool TryEnumerateNA(out string errorMsg)
+        {
+            errorMsg = "";
+            bool ret = true;
+            try
+            {
+                PerformanceCounterCategory category = new PerformanceCounterCategory("Network Interface");
+
+                foreach (string name in category.GetInstanceNames())
+                {
+                    // This one exists on every computer.  
+                    if (name == "MS TCP Loopback interface")
+                        continue;
+                    // Create an instance of NetworkAdapter class, and create performance counters for it.  
+                    NetworkAdapter adapter =
+                        new NetworkAdapter(name)
+                        {
+                            dlCounter = new PerformanceCounter("Network Interface", "Bytes Received/sec", name),
+                            ulCounter = new PerformanceCounter("Network Interface", "Bytes Sent/sec", name)
+                        };
+                    this.adapters.Add(adapter); // Add it to ArrayList adapter  
+                }
+            }
+            catch (Exception e)
+            {
+                errorMsg = e.Message;
+                ret = false;
+            }
+
+            return ret;
         }
 
         private void timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -84,13 +143,14 @@ namespace NetMonitor
             }
         }
 
-        public void GetSpeedMonitored(out string upSpeed, out string downSpeed)
+        public void GetSpeedMonitored(out string upSpeed, out string downSpeed, out string downTotal)
         {
-            long up = 0, down = 0;
+            long up = 0, down = 0, downT = 0;
             foreach (NetworkAdapter adapter in this.monitoredAdapters)
             {
                 up += adapter.UploadSpeed;
                 down += adapter.DownloadSpeed;
+                downT += adapter.DownloadTotal;
             }
             if (up > 1024 * 1024)
             {
@@ -107,6 +167,19 @@ namespace NetMonitor
             else
             {
                 downSpeed = $"{(double)down / 1024:n}KB/s";
+            }
+            
+            if (downT > 1024 * 1024 * 1024)
+            {
+                downTotal = $"{(double)downT / 1024 / 1024 / 1024:n}GB";
+            }
+            else if (downT > 1024 * 1024)
+            {
+                downTotal = $"{(double)downT / 1024 / 1024:n}MB";
+            }
+            else
+            {
+                downTotal = $"{(double)downT / 1024:n}KB";
             }
         }
     }

@@ -18,7 +18,7 @@ namespace NetMonitor
         }
 
         private long dlSpeed, ulSpeed;       // Download/Upload speed in bytes per second.  
-        private long dlValue, ulValue;       // Download/Upload counter value in bytes.  
+        private long dlValue, ulValue, InitialDownValue;       // Download/Upload counter value in bytes.  
         private long dlValueOld, ulValueOld; // Download/Upload counter value one second earlier, in bytes.  
 
         private string name;                               // The name of the adapter.  
@@ -31,6 +31,7 @@ namespace NetMonitor
             // Since dlValueOld and ulValueOld are used in method refresh() to calculate network speed, they must have be initialized.  
             this.dlValueOld = this.dlCounter.NextSample().RawValue;
             this.ulValueOld = this.ulCounter.NextSample().RawValue;
+            this.InitialDownValue = dlValueOld;
         }
         /// <summary>  
         /// Obtain new sample from performance counters, and refresh the values saved in dlSpeed, ulSpeed, etc.  
@@ -70,5 +71,7 @@ namespace NetMonitor
         /// Current upload speed in bytes per second.  
         /// </summary>  
         public long UploadSpeed => this.ulSpeed;
+
+        public long DownloadTotal => this.dlValue - InitialDownValue;
     }
 }

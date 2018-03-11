@@ -101,10 +101,11 @@ namespace NetMonitor
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            string up, down;
-            Monitor.GetSpeedMonitored(out up, out down);
+            string up, down, downT;
+            Monitor.GetSpeedMonitored(out up, out down, out downT);
             this.lblDown.Text = down;
             this.lblUp.Text = up;
+            totalDownLoadToolStripMenuItem.Text = "↓ " + downT;
         }
     }
 }
