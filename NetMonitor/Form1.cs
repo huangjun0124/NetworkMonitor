@@ -107,5 +107,11 @@ namespace NetMonitor
             this.lblUp.Text = up;
             totalDownLoadToolStripMenuItem.Text = "↓ " + downT;
         }
+
+        private void 获取不到网卡信息ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText("LODCTR /R");
+            MessageBox.Show("管理员运行 cmd 执行命令【LODCTR /R】(已自动复制到剪切板),并重启程序！");
+        }
     }
 }

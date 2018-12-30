@@ -35,9 +35,10 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.selectAdapterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.All = new System.Windows.Forms.ToolStripMenuItem();
+            this.totalDownLoadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.totalDownLoadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.获取不到网卡信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -77,16 +78,17 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.selectAdapterToolStripMenuItem,
             this.totalDownLoadToolStripMenuItem,
-            this.exitToolStripMenuItem});
+            this.exitToolStripMenuItem,
+            this.获取不到网卡信息ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(172, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(185, 114);
             // 
             // selectAdapterToolStripMenuItem
             // 
             this.selectAdapterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.All});
             this.selectAdapterToolStripMenuItem.Name = "selectAdapterToolStripMenuItem";
-            this.selectAdapterToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.selectAdapterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.selectAdapterToolStripMenuItem.Text = "SelectAdapter";
             // 
             // All
@@ -96,10 +98,16 @@
             this.All.Text = "√All";
             this.All.Click += new System.EventHandler(this.adapterToolStripMenuItem_Click);
             // 
+            // totalDownLoadToolStripMenuItem
+            // 
+            this.totalDownLoadToolStripMenuItem.Name = "totalDownLoadToolStripMenuItem";
+            this.totalDownLoadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.totalDownLoadToolStripMenuItem.Text = "Total DownLoad";
+            // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -109,11 +117,12 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // totalDownLoadToolStripMenuItem
+            // 获取不到网卡信息ToolStripMenuItem
             // 
-            this.totalDownLoadToolStripMenuItem.Name = "totalDownLoadToolStripMenuItem";
-            this.totalDownLoadToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.totalDownLoadToolStripMenuItem.Text = "Total DownLoad";
+            this.获取不到网卡信息ToolStripMenuItem.Name = "获取不到网卡信息ToolStripMenuItem";
+            this.获取不到网卡信息ToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.获取不到网卡信息ToolStripMenuItem.Text = "获取不到网卡信息！";
+            this.获取不到网卡信息ToolStripMenuItem.Click += new System.EventHandler(this.获取不到网卡信息ToolStripMenuItem_Click);
             // 
             // NetMonitor
             // 
@@ -127,7 +136,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "NetMonitor";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -154,6 +163,7 @@
         private System.Windows.Forms.ToolStripMenuItem All;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolStripMenuItem totalDownLoadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 获取不到网卡信息ToolStripMenuItem;
     }
 }
 

@@ -54,6 +54,7 @@ namespace NetMonitor
             p.StartInfo.RedirectStandardOutput = true; //由调用程序获取输出信息
             p.StartInfo.RedirectStandardError = true; //重定向标准错误输出
             p.StartInfo.CreateNoWindow = true; //不显示程序窗口
+            p.StartInfo.Verb = "RunAs"; // 确保以管理员身份运行
             p.Start(); //启动程序
 
             //向cmd窗口发送输入信息
